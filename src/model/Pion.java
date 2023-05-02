@@ -24,7 +24,10 @@ public class Pion extends AbstractPiece implements Pions {
 		if (dx == 0 && dy == 0) {
 			return false;
 		}
-		if ((dx == 1 && dy == 0)) {
+		if ((dy == 2) && (this.getY()==1 || this.getY()==6)){
+			return true;
+		}
+		if ((dx == 0 && dy == 1)) {
 			return true;
 		}
 		if (isMoveDiagOk(xFinal, yFinal)) {

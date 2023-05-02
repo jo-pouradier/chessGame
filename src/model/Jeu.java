@@ -166,6 +166,23 @@ public class Jeu {
 		// TODO
 	}
 	
+	private void afficherJeu() {
+        System.out.println("  a b c d e f g h");
+        for (int j = 0; j < 8; j++) {
+            String line = (j + 1) + " ";
+            for (int i = 0; i < 8; i++) {
+                if (isPieceHere(i,j) ) {
+                    line += getPieceType(i,j);
+                } else {
+                    line += ".";
+                }
+                    line += " ";
+                }
+            System.out.println(line);
+        }
+        System.out.println("\n");
+    }
+	
 	public static void main(String[] args) {
 		Jeu jeu = new Jeu(Couleur.NOIR);
 		System.out.println(jeu);
@@ -176,7 +193,11 @@ public class Jeu {
 		
 		Coord c = jeu.getKingCoord();
 		System.out.println(c);
-		System.out.println(jeu);
+		
+		jeu.afficherJeu();
+        jeu.move(1,1,1,3);
+        jeu.move(1, 3, 1, 4);
+        jeu.afficherJeu();
 		
 	}
 	
