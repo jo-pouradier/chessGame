@@ -1,0 +1,9 @@
+/**
+ * 
+ */
+/**
+ * @author jopouradierduteil
+ *
+ */
+module chessGame {
+}
