@@ -1,11 +1,12 @@
 package model;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Echiquier implements BoardGames {
 	
-	private Jeu jeuBlanc;
-	private Jeu jeuNoir;
+	private final Jeu jeuBlanc;
+	private final Jeu jeuNoir;
 	private Jeu jeuCourant;
 	private Jeu jeuNonCourant;
 	private String message = "";
@@ -37,29 +38,58 @@ public class Echiquier implements BoardGames {
 		jeuNonCourant = jeuTemp;
 	}
 
-	public boolean isMoveOk(int xInit, int yInit, int xFinal, int yFinal) {
+	public Pieces getPieceXY(int x, int y) {
 		for (Pieces p : jeuCourant.getPieces()) {
-			if (p.getX()==xInit && p.getY()==yInit) {
-				if (p.isMoveOk(xFinal, yFinal)) {
-					return true;
-				}
+			if (p.getX()==x && p.getY()==y) {
+				return p;
 			}
 		}
-		return false;
+		return null;
+	}
+
+	public boolean isMoveOk(int xInit, int yInit, int xFinal, int yFinal) {
+		Pieces p = getPieceXY(xInit, yInit);
+		return p.isMoveOk(xFinal, yFinal);
 	}
 	
 	@Override
 	public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
+		boolean ret = false;
+		Pieces movingPiece;
 		if (isMoveOk(xInit, yInit, xFinal, yFinal)) {
-			
+			movingPiece = getPieceXY(xInit, yInit);
+			if (movingPiece == null) {
+				setMessage("Pas de pièce à cet endroit");
+				return false;
+			}
+			movingPiece.move(xFinal, yFinal);
+			ret = true;
+			// on vérifie si le roi est en échec et on rollback si besoin
+			if (roiEnEchec()){
+				movingPiece.move(xInit, yInit);
+				ret = false;
+				setMessage("Votre roi est en échec si vous jouez ce coup");
+			}
+			Pieces capturePiece = getPieceXY(xFinal, yFinal);
+			if (capturePiece != null) {
+				capturePiece.capture();
+				setMessage("Vous avez capturé une pièce");
+			}
 		}
-		return false;
+		return ret;
 	}
 	
 	public List<PieceIHM> getPiecesIHM(){
-		// TODO
-		
-		return null;
+		List<PieceIHM> listPieceIHM = new LinkedList<PieceIHM>();
+		List<Pieces> allPieces = new LinkedList<>();
+		allPieces.addAll(jeuCourant.getPieces());
+		allPieces.addAll(jeuNonCourant.getPieces());
+		for (Pieces p : allPieces){
+			PieceIHM pihm = new PieceIHM(p.getClass().getSimpleName(), p.getCouleur());
+			pihm.add(new Coord(p.getX(), p.getY()));
+			listPieceIHM.add(pihm);
+		}
+		return listPieceIHM;
 	}
 
 	@Override
@@ -79,6 +109,20 @@ public class Echiquier implements BoardGames {
 	public Couleur getPieceColor(int x, int y) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public boolean roiEnEchec() {
+		for (Pieces p: jeuCourant.getPieces()){
+			if (p instanceof Roi){
+				// on regarde les deplacements de tout les pieces de l'autre joueur
+				for (Pieces p2: jeuNonCourant.getPieces()){
+					if (p2.isMoveOk(p.getX(), p.getY())){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 	public static void main(String[] args) {
