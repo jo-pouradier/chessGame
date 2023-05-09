@@ -1,15 +1,16 @@
 package model;
 
 import java.util.List;
-import java.util.LinkedList;
+import java.util.Objects;
+
 import tools.ChessPiecesFactory;
 import tools.ChessSinglePieceFactory;
 
 
 public class Jeu {
 
-	private Couleur couleur;
-	private List<Pieces> pieces;
+	private final Couleur couleur;
+	private final List<Pieces> pieces;
 	
 	public Jeu(Couleur couleur) {
 		this.couleur = couleur;
@@ -56,7 +57,7 @@ public class Jeu {
 	public Coord getKingCoord() {
 		Coord coordR = null;
 		for (Pieces piece : pieces) {
-			if( piece.getName() == "Roi") {
+			if(Objects.equals(piece.getName(), "Roi")) {
 				coordR = new Coord(piece.getX(), piece.getY());
 				break;
 			}
@@ -68,39 +69,10 @@ public class Jeu {
 	* @return une vue de la liste des pièces en cours
 	* ne donnant que des accès en lecture sur des PieceIHM * (type piece + couleur + liste de coordonnées)
 	*/
-	public List<PieceIHM> getPiecesIHM(){ 
-		PieceIHM newPieceIHM = null;	
-		List<PieceIHM> list = new LinkedList<PieceIHM>();
-		for (Pieces piece : pieces){ 
-			boolean existe = false;
-			// si le type de piece existe déjà dans la liste de PieceIHM
-			// ajout des coordonnées de la pièce dans la liste de Coord de ce type 
-			// si elle est toujours en jeu (x et y != -1)
-			for ( PieceIHM pieceIHM : list){
-				if ((pieceIHM.getTypePiece()).equals(piece.getClass().getSimpleName())){ 
-					existe = true;
-					if (piece.getX() != -1){
-						pieceIHM.add(new Coord(piece.getX(), piece.getY()));
-					}
-				}
-			}
-	       // sinon, création d'une nouvelle PieceIHM si la pièce est toujours en jeu
-			if (! existe) {
-				if (piece.getX() != -1){
-					newPieceIHM = new PieceIHM(piece.getClass().getSimpleName(), piece.getCouleur());
-					newPieceIHM.add(new Coord(piece.getX(), piece.getY())); 
-					list.add(newPieceIHM);
-					
-				}
-			}
-		}
-		return list;
-	}
 	
 	public boolean isMoveOk(int xInit, int yInit,int xFinal,int yFinal) {
 		Pieces p = findPiece(xInit, yInit);
-		boolean b = p.isMoveOk(xFinal, yFinal);
-		return b;
+		return p.isMoveOk(xFinal, yFinal);
 	}
 	
 	public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
@@ -114,13 +86,11 @@ public class Jeu {
 		return p.getClass().getSimpleName();
 	}
 	
-	public boolean isPawnPromotion(int xFinal, int yfinal) {
-		Pieces p = findPiece(xFinal, yfinal);
-		if (getPieceType(xFinal, yfinal)=="Pion") {
+	public boolean isPawnPromotion(int xFinal, int yFinal) {
+		Pieces p = findPiece(xFinal, yFinal);
+		if (Objects.equals(getPieceType(xFinal, yFinal), "Pion")) {
 			int pY = p.getY();
-			if(pY == 0 || pY == 8){
-				return true;
-			}
+			return pY == 0 || pY == 8;
 		}
 		return false;
 	}
@@ -138,14 +108,14 @@ public class Jeu {
 	
 	@Override
 	public String toString() {
-		String txt = "Jeu: "+ getCouleur() + "\n\t";
+		StringBuilder txt = new StringBuilder("Jeu: " + getCouleur() + "\n\t");
 		for (Pieces p : pieces) {
-			txt += p.toString() + "\n\t";
+			txt.append(p.toString()).append("\n\t");
 		}
-		return txt;
+		return txt.toString();
 	}
 	
-	public boolean capture(int xCatch, int yCatch) {
+	public boolean undoCapture(int xCatch, int yCatch) {
 		// TODO
 		return false;
 	}
@@ -169,14 +139,14 @@ public class Jeu {
 	private void afficherJeu() {
         System.out.println("  a b c d e f g h");
         for (int j = 0; j < 8; j++) {
-            String line = (j + 1) + " ";
+            StringBuilder line = new StringBuilder((j + 1) + " ");
             for (int i = 0; i < 8; i++) {
                 if (isPieceHere(i,j) ) {
-                    line += getPieceType(i,j);
+                    line.append(getPieceType(i, j));
                 } else {
-                    line += ".";
+                    line.append(".");
                 }
-                    line += " ";
+                    line.append(" ");
                 }
             System.out.println(line);
         }
