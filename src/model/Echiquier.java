@@ -128,6 +128,7 @@ public class Echiquier implements BoardGames {
 	public static void main(String[] args) {
 		Echiquier e = new Echiquier();
 		System.out.println(e);
+		System.out.println(e.getPiecesIHM());
 		
 	}
 

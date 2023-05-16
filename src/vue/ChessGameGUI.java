@@ -1,15 +1,15 @@
 package vue;
 
-import model.Couleur;
-import model.Jeu;
-import model.Pieces;
+import model.*;
 import controler.ChessGameControlers;
+import tools.ChessImageProvider;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.List;
 
 public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionListener {
 
@@ -35,7 +35,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
         chessBoard.setPreferredSize(boardSize);
         chessBoard.setBounds(0, 0, boardSize.width, boardSize.height);
 
-        for (int i = 0; i < 64; i++) {
+        for (int i = 0; i < 8*8; i++) {
             JPanel square = new JPanel(new BorderLayout());
             chessBoard.add(square);
 
@@ -49,13 +49,15 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
         //Add a few pieces to the board
         JLabel piece;
         JPanel panel;
-        Jeu jeu = new Jeu(Couleur.BLANC);
-        int i = 0;
-        for (Pieces p : jeu.getPieces()) {
-            piece = new JLabel(new ImageIcon("./src/launcher/localLauncher/images/" + p.getName().toLowerCase() + "BlancS.png"));
-            panel = (JPanel) chessBoard.getComponent(i);
+        Echiquier echiquier = new Echiquier();
+        List<PieceIHM> piecesIHM = echiquier.getPiecesIHM();
+        for (PieceIHM p : piecesIHM) {
+            String image = ChessImageProvider.getImageFile(p.getTypePiece(), p.getCouleur());
+            piece = new JLabel(new ImageIcon(image));
+            int place = p.getList().get(0).x + p.getList().get(0).y * 8;
+            System.out.println(place);
+            panel = (JPanel) chessBoard.getComponent(place);
             panel.add(piece);
-            i++;
         }
     }
 
