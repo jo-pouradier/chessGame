@@ -1,7 +1,7 @@
 package vue;
 
 import model.*;
-import controler.ChessGameControlers;
+import controler.ChessGameControllers;
 import tools.ChessImageProvider;
 
 import javax.swing.*;
@@ -19,13 +19,13 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
     JLabel chessPiece;
     int xAdjustment;
     int yAdjustment;
-    ChessGameControlers chessGameControler;
+    ChessGameControllers chessGameControler;
 
     Dimension boardSize;
 
     Coord lastCoord;
 
-    public ChessGameGUI(String name, ChessGameControlers chessGameControler, java.awt.Dimension boardSize) {
+    public ChessGameGUI(String name, ChessGameControllers chessGameControler, java.awt.Dimension boardSize) {
         this.chessGameControler = chessGameControler;
         this.boardSize = boardSize;
         //  Use a Layered Pane for this application
@@ -36,18 +36,14 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
         layeredPane.addMouseMotionListener(this);
 
         //Add a chess board to the Layered Pane
-
         chessBoard = new JPanel();
+        chessBoard.setName(name);
         layeredPane.add(chessBoard, JLayeredPane.DEFAULT_LAYER);
         chessBoard.setLayout(new GridLayout(8, 8));
         chessBoard.setPreferredSize(boardSize);
         chessBoard.setBounds(0, 0, boardSize.width, boardSize.height);
 
         displayCase();
-        // Add a few pieces to the board
-//        List<PieceIHM> pieceIMHS = chessGameControler.getPiecesIHM();
-//        displayPiecesIHM(pieceIMHS);
-
     }
 
     public void mousePressed(MouseEvent e) {

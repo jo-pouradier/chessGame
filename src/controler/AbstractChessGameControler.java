@@ -4,20 +4,16 @@ import model.Coord;
 import model.Couleur;
 import model.observable.ChessGame;
 
-
 /**
  * @author francoise.perrin
- * 
  * le controleur illustre le DP Strategy vis-à-vis de la Vue
- * 
  * Méthodes communes des controleurs
  * dont le travail essentiel est de faire communiquer
  * la vue et le modèle pour gérer le déplacement des pièces
  * déplacement figé à ce niveau de la hiérarchie dans un Template Method 
  * les petites lignes étant implémentées dans les classes dérivées
- *
  */
-public abstract class AbstractChessGameControler implements ChessGameControlers {
+public abstract class AbstractChessGameControler implements ChessGameControllers {
 
 	protected ChessGame chessGame;	 
 
@@ -27,7 +23,7 @@ public abstract class AbstractChessGameControler implements ChessGameControlers 
 	}
 
 	/* (non-Javadoc)
-	 * @see controler.ChessGameControlers#move(model.Coord, model.Coord)
+	 * @see controler.ChessGameControllers#move(model.Coord, model.Coord)
 	 * 
 	 * Cette méthode illustre le DP "Template Method" 
 	 * avec une partie commune implémentée dans cette classe
@@ -43,7 +39,7 @@ public abstract class AbstractChessGameControler implements ChessGameControlers 
 			System.out.println("Ce n'est pas à vous de jouer, c'est au Joueur "+ this.chessGame.getColorCurrentPlayer());
 			chessGame.refresh();
 		}
-		// Actions différentes selon les types de controleur
+		// Actions différentes selon les types de controller
 		 else if (moveModel(initCoord, finalCoord)) {
 			endMove(initCoord, finalCoord, promotionType);
 			ret = true;
@@ -74,9 +70,7 @@ public abstract class AbstractChessGameControler implements ChessGameControlers 
 	}
 
 	public String getMessage() {
-		String ret = null;		 
-		ret = this.chessGame.getMessage();	 
-		return ret;
+		return this.chessGame.getMessage();
 	}
 
 	public String toString() {
