@@ -28,12 +28,8 @@ public abstract class AbstractPiece implements Pieces{
 	}
 	
 	public boolean capture() {
-		// TODO ??
-		if (this.coord.x == -1 && this.coord.y == -1) {
-			return true;
-		}
-		return false;
-		
+		coord = new Coord(-1,-1);
+		return true;
 	}
 	
 	@Override
@@ -49,7 +45,14 @@ public abstract class AbstractPiece implements Pieces{
 		}
 		return false;
 	}
-	
+
+	public boolean move (int x, int y, boolean force){
+		if (force) {
+			coord = new Coord(x,y);
+			return true;
+		}
+		return false;
+	}
 	public abstract boolean isMoveOk(int xFinal, int yFinal);
 	
 	public static void main(String[] args) {

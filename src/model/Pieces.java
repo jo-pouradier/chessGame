@@ -7,6 +7,7 @@ public interface Pieces {
 	Couleur getCouleur();
 	boolean isMoveOk(int xFinal, int yFinal);
 	boolean move(int xFinal, int yFinal);
+	boolean move (int xFinal, int yFinal, boolean forceMove);
 	boolean capture();
 	String getName();
 	

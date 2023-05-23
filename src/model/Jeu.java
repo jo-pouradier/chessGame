@@ -42,18 +42,16 @@ public class Jeu {
 	}
 	
 	public Pieces findPiece(int x, int y) {
-		Pieces pieceR = null;
 		if (isPieceHere(x, y)) {
 			for (Pieces piece : pieces) {
 				if( piece.getX()==x && piece.getY() == y) {
-					pieceR = piece;
-					break;
+					return piece;
 				}
 			}
 		}
-		return pieceR;
+		return null;
 	}
-	
+
 	public Coord getKingCoord() {
 		Coord coordR = null;
 		for (Pieces piece : pieces) {
@@ -64,28 +62,27 @@ public class Jeu {
 		}
 		return coordR;
 	}
-	
+
 	/**
 	* @return une vue de la liste des pièces en cours
 	* ne donnant que des accès en lecture sur des PieceIHM * (type piece + couleur + liste de coordonnées)
 	*/
-	
 	public boolean isMoveOk(int xInit, int yInit,int xFinal,int yFinal) {
 		Pieces p = findPiece(xInit, yInit);
 		return p.isMoveOk(xFinal, yFinal);
 	}
-	
+
 	public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
 		Pieces p = findPiece(xInit, yInit);
 		return p.move(xFinal, yFinal);
 	}
 
-	
+
 	public String getPieceType(int x, int y){
 		Pieces p = findPiece(x, y);
 		return p.getClass().getSimpleName();
 	}
-	
+
 	public boolean isPawnPromotion(int xFinal, int yFinal) {
 		Pieces p = findPiece(xFinal, yFinal);
 		if (Objects.equals(getPieceType(xFinal, yFinal), "Pion")) {
@@ -94,7 +91,7 @@ public class Jeu {
 		}
 		return false;
 	}
-	
+
 	public boolean pawnPromotion(int xFinal, int yFinal, String type) {
 		if (isPawnPromotion(xFinal, yFinal)) {
 			Pieces p = findPiece(xFinal, yFinal);
@@ -105,7 +102,7 @@ public class Jeu {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder txt = new StringBuilder("Jeu: " + getCouleur() + "\n\t");
@@ -128,8 +125,8 @@ public class Jeu {
 		// TODO
 	}
 	
-	public void undoMove() {
-		// TODO
+	public void undoMove(Pieces p, int xInit, int yInit) {
+		p.move(xInit, yInit, true);
 	}
 	
 	public void undoCapture() {

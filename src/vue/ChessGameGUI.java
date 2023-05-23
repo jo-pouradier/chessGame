@@ -74,11 +74,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
     public void mouseReleased(MouseEvent e) {
         if (chessPiece == null) return;
         chessPiece.setVisible(false);
-
-        Component c;
-        System.out.println("initCoord=" + new Coord((lastCoord.x)/(boardSize.width/8), (lastCoord.y)/(boardSize.height/8)));
-        System.out.println("finalCoord=" + new Coord((e.getX())/(boardSize.width/8), (e.getY())/(boardSize.width/8)));
-        boolean moveOK = chessGameControler.move(new Coord((lastCoord.x)/(boardSize.width/8), (lastCoord.y)/(boardSize.height/8)), new Coord((e.getX())/(boardSize.width/8), (e.getY())/(boardSize.width/8)));
+        chessGameControler.move(new Coord((lastCoord.x)/(boardSize.width/8), (lastCoord.y)/(boardSize.height/8)), new Coord((e.getX())/(boardSize.width/8), (e.getY())/(boardSize.width/8)));
     }
 
     public void mouseClicked(MouseEvent e) {
@@ -116,6 +112,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
         JLabel piece;
         JPanel panel;
         for (PieceIHM p : pieceIHMS) {
+            if (p.getList().get(0).x == -1 && p.getList().get(0).y == -1) continue;
             String image = ChessImageProvider.getImageFile(p.getTypePiece(), p.getCouleur());
             piece = new JLabel(new ImageIcon(image));
             int place = p.getList().get(0).x + p.getList().get(0).y * 8;

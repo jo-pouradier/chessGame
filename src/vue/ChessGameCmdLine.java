@@ -36,19 +36,14 @@ public class ChessGameCmdLine implements Observer{
 	public void update(Observable arg0, Object arg1) {
 		
 		System.out.println(chessGameControler.getMessage() + "\n");	
-
 		List<PieceIHM> piecesIHM = (List<PieceIHM>) arg1;
-
-
 		String[][] damier = new String[8][8];
 		
 		// création d'un tableau 2D avec les noms des pièces
 		for(PieceIHM pieceIHM : piecesIHM) {
-
 			Couleur color = pieceIHM.getCouleur();
 			String stColor = (Couleur.BLANC == color ? "B_" : "N_" );
 			String type = (pieceIHM.getTypePiece()).substring(0, 2);
-			
 			for(Coord coord : pieceIHM.getList()) {
 				damier[coord.y][coord.x] = stColor + type;
 			}			

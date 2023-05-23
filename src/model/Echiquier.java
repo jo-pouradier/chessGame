@@ -39,49 +39,52 @@ public class Echiquier implements BoardGames {
 	}
 
 	public Pieces getPieceXY(int x, int y) {
-		for (Pieces p : jeuCourant.getPieces()) {
-			if (p.getX()==x && p.getY()==y) {
-				return p;
-			}
+		Pieces p = jeuCourant.isPieceHere(x, y) ? jeuCourant.findPiece(x, y) : null;
+		if (p == null) {
+			p = jeuNonCourant.isPieceHere(x, y) ? jeuNonCourant.findPiece(x, y) : null;
 		}
-		return null;
+		return p;
 	}
 
 	public boolean isMoveOk(int xInit, int yInit, int xFinal, int yFinal) {
+		// on verifie s'il n'y a pas de piece qui serait sauté / sur le chemin
 		if (!verifyPath(new Coord(xInit, yInit), new Coord(xFinal, yFinal))) {
 			setMessage("Le chemin n'est pas libre");
 			System.out.println("Le chemin n'est pas libre");
 			return false;
 		}
+		// on vérifie si la piece peut se déplacer à cet endroit
 		Pieces p = getPieceXY(xInit, yInit);
-		if(p == null)
-			return false;
+		if(p == null) return false;
 		return p.isMoveOk(xFinal, yFinal);
 	}
 	
 	@Override
 	public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
 		boolean ret = false;
-		Pieces movingPiece;
+		Pieces movingPiece = getPieceXY(xInit, yInit);
+		Pieces capturePiece = getPieceXY(xFinal, yFinal);
 
 		if (isMoveOk(xInit, yInit, xFinal, yFinal)) {
-			movingPiece = getPieceXY(xInit, yInit);
 			if (movingPiece == null) {
 				setMessage("Pas de pièce à cet endroit");
 				return false;
 			}
 			movingPiece.move(xFinal, yFinal);
 			ret = true;
-			// on vérifie si le roi est en échec et on rollback si besoin
+			// on bouge la piece et on vérifie si le roi n'est PAS en échec, on rollback si besoin
 			if (roiEnEchec()){
-				movingPiece.move(xInit, yInit);
-				ret = false;
 				setMessage("Votre roi est en échec si vous jouez ce coup");
+				System.out.println("Votre roi est en échec si vous jouez ce coup");
+				jeuCourant.undoMove(movingPiece, xInit, yInit);
+				return false;
 			}
-			Pieces capturePiece = getPieceXY(xFinal, yFinal);
-			if (capturePiece != null) {
+			// on vérifie si on capture une pièce
+			System.out.println("capturePiece : " + capturePiece);
+			if (capturePiece != null && capturePiece.getCouleur() != movingPiece.getCouleur()) {
 				capturePiece.capture();
 				setMessage("Vous avez capturé une pièce");
+				System.out.println("Vous avez capturé une pièce");
 			}
 		}
 		return ret;
@@ -124,11 +127,10 @@ public class Echiquier implements BoardGames {
 	public boolean roiEnEchec() {
 		for (Pieces p: jeuCourant.getPieces()){
 			if (p instanceof Roi){
-				// on regarde les deplacements de tout les pieces de l'autre joueur
+				// on regarde les deplacements de toutes les pieces de l'autre joueur
+				// et on regarde s'il y a une pièce sur le passage
 				for (Pieces p2: jeuNonCourant.getPieces()){
-					if (p2.isMoveOk(p.getX(), p.getY())){
-						return true;
-					}
+					if (p2.isMoveOk(p.getX(), p.getY()) && verifyPath(new Coord(p2.getX(),p2.getY()),new Coord(p.getX(),p.getY()))) return true;
 				}
 			}
 		}
@@ -143,15 +145,10 @@ public class Echiquier implements BoardGames {
 	}
 
 	public boolean verifyPath(Coord initCoord, Coord finalCoord) {
-		System.out.println("verify path");
 		// create the vector between the two points
 		int xVector = finalCoord.x - initCoord.x;
 		int yVector = finalCoord.y - initCoord.y;
-		System.out.println("xVector : " + xVector + " yVector : " + yVector);
-		System.out.println("initCoord : " + initCoord + " finalCoord : " + finalCoord);
-
 		List<PieceIHM> piecesIHM = getPiecesIHM();
-
 		// test straight lines
 		if (xVector == 0) {
 			int startY = Math.min(initCoord.y, finalCoord.y) + 1;
@@ -159,7 +156,6 @@ public class Echiquier implements BoardGames {
 			for (PieceIHM p : piecesIHM) {
 				Coord pieceCoord = p.getList().get(0);
 				if (pieceCoord.x == initCoord.x && pieceCoord.y >= startY && pieceCoord.y < endY) {
-					System.out.println(p);
 					return false;
 				}
 			}
@@ -169,7 +165,6 @@ public class Echiquier implements BoardGames {
 			for (PieceIHM p : piecesIHM) {
 				Coord pieceCoord = p.getList().get(0);
 				if (pieceCoord.y == initCoord.y && pieceCoord.x >= startX && pieceCoord.x < endX) {
-					System.out.println(p);
 					return false;
 				}
 			}
