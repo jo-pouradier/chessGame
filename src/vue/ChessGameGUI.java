@@ -77,47 +77,8 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
 
         Component c;
         System.out.println("initCoord=" + new Coord((lastCoord.x+xAdjustment)/(boardSize.width/8), (lastCoord.y+yAdjustment)/(boardSize.height/8)));
-        System.out.println("finalCoord=" + new Coord(e.getX()+xAdjustment, e.getY()+yAdjustment));
-        boolean moveOK = chessGameControler.move(new Coord(lastCoord.x+xAdjustment, lastCoord.y+yAdjustment), new Coord(e.getX()+xAdjustment, e.getY()+yAdjustment));
-        if (moveOK) {
-            System.out.println("move OK");
-            c = chessBoard.findComponentAt(e.getX(), e.getY());
-            Container parent;
-            if (c instanceof JLabel) {
-                parent = c.getParent();
-                parent.remove(0);
-            } else {
-                parent = (Container) c;
-            }
-            parent.add(chessPiece);
-            chessPiece.setVisible(true);
-        } else {
-            System.out.println("move not OK");
-            c = chessBoard.findComponentAt(lastCoord.x+xAdjustment, lastCoord.y+yAdjustment);
-            Container parent;
-            if (c instanceof JLabel) {
-                parent = c.getParent();
-                parent.remove(0);
-            } else {
-                parent = (Container) c;
-            }
-            parent.add(chessPiece);
-            chessPiece.setLocation(lastCoord.x+xAdjustment, lastCoord.y+yAdjustment);
-            chessPiece.setVisible(true);
-
-
-        }
-        lastCoord = null;
-        Container parent;
-        if (c instanceof JLabel) {
-            parent = c.getParent();
-            parent.remove(0);
-        } else {
-            parent = (Container) c;
-        }
-        parent.add(chessPiece);
-
-        chessPiece.setVisible(true);
+        System.out.println("finalCoord=" + new Coord((e.getX()+xAdjustment)/(boardSize.width/8), (e.getY()+yAdjustment)/(boardSize.width/8)));
+        boolean moveOK = chessGameControler.move(new Coord((lastCoord.x+xAdjustment)/(boardSize.width/8), (lastCoord.y+yAdjustment)/(boardSize.height/8)), new Coord((e.getX()+xAdjustment)/(boardSize.width/8), (e.getY()+yAdjustment)/(boardSize.width/8)));
     }
 
     public void mouseClicked(MouseEvent e) {

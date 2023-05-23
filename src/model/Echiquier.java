@@ -49,6 +49,8 @@ public class Echiquier implements BoardGames {
 
 	public boolean isMoveOk(int xInit, int yInit, int xFinal, int yFinal) {
 		Pieces p = getPieceXY(xInit, yInit);
+		if(p == null)
+			return false;
 		return p.isMoveOk(xFinal, yFinal);
 	}
 	
