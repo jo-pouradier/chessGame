@@ -78,7 +78,7 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
         Component c;
         System.out.println("initCoord=" + new Coord((lastCoord.x+xAdjustment)/(boardSize.width/8), (lastCoord.y+yAdjustment)/(boardSize.height/8)));
         System.out.println("finalCoord=" + new Coord((e.getX()+xAdjustment)/(boardSize.width/8), (e.getY()+yAdjustment)/(boardSize.width/8)));
-        boolean moveOK = chessGameControler.move(new Coord((lastCoord.x+xAdjustment)/(boardSize.width/8), (lastCoord.y+yAdjustment)/(boardSize.height/8)), new Coord((e.getX()+xAdjustment)/(boardSize.width/8), (e.getY()+yAdjustment)/(boardSize.width/8)));
+        boolean moveOK = chessGameControler.move(new Coord((lastCoord.x)/(boardSize.width/8), (lastCoord.y)/(boardSize.height/8)), new Coord((e.getX())/(boardSize.width/8), (e.getY())/(boardSize.width/8)));
     }
 
     public void mouseClicked(MouseEvent e) {

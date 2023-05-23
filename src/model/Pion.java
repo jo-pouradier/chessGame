@@ -23,14 +23,19 @@ public class Pion extends AbstractPiece implements Pions {
 		
 		if (dx == 0 && dy == 0) {
 			return false;
-		}
-		if ((dy == 2) && (this.getY()==1 || this.getY()==6)){
+		} else if ((dy == 2) && (this.getY()==1 || this.getY()==6)){
 			return true;
-		}
-		if ((dx == 0 && dy == 1)) {
-			return true;
-		}
-		if (isMoveDiagOk(xFinal, yFinal)) {
+		} else if ((dx == 0 && dy == 1)) {
+			// on verifie qu'on va dans le bon sens
+			if (this.getCouleur() == Couleur.BLANC && yFinal < this.getY()) {
+				return true;
+			} else if (this.getCouleur() == Couleur.NOIR && yFinal > this.getY()) {
+				return true;
+			} else {
+				System.out.println("Vous bougez dans le mauvais sens");
+				return false;
+			}
+		} else if (isMoveDiagOk(xFinal, yFinal)) {
 			return true;
 		}
 		return false;
