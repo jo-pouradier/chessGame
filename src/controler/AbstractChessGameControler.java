@@ -51,6 +51,7 @@ public abstract class AbstractChessGameControler implements ChessGameControlers 
 
 		} else {
 			System.out.println("Ce n'est pas à vous de jouer, c'est au Joueur "+ this.chessGame.getColorCurrentPlayer());
+			chessGame.refresh();
 		}
 		return ret;
 	}

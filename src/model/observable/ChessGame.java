@@ -107,4 +107,8 @@ public class ChessGame extends Observable implements BoardGames{
 		super.addObserver(o);
 		this.notifyObservers(echiquier.getPiecesIHM());
 	}
+
+	public void refresh(){
+		this.notifyObservers(echiquier.getPiecesIHM());
+	}
 }
