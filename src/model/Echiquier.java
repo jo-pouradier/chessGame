@@ -103,13 +103,15 @@ public class Echiquier implements BoardGames {
 
 	@Override
 	public Couleur getColorCurrentPlayer() {
-		// TODO Auto-generated method stub
-		return null;
+		return jeuCourant.getCouleur();
 	}
 
 	@Override
 	public Couleur getPieceColor(int x, int y) {
-		// TODO Auto-generated method stub
+		Pieces p = getPieceXY(x, y);
+		if (p != null) {
+			return p.getCouleur();
+		}
 		return null;
 	}
 

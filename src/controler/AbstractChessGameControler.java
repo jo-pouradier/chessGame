@@ -49,6 +49,8 @@ public abstract class AbstractChessGameControler implements ChessGameControlers 
 				this.endMove(initCoord, finalCoord, promotionType);
 			}
 
+		} else {
+			System.out.println("Ce n'est pas à vous de jouer, c'est au Joueur "+ this.chessGame.getColorCurrentPlayer());
 		}
 		return ret;
 	}
