@@ -48,6 +48,11 @@ public class Echiquier implements BoardGames {
 	}
 
 	public boolean isMoveOk(int xInit, int yInit, int xFinal, int yFinal) {
+		if (!verifyPath(new Coord(xInit, yInit), new Coord(xFinal, yFinal))) {
+			setMessage("Le chemin n'est pas libre");
+			System.out.println("Le chemin n'est pas libre");
+			return false;
+		}
 		Pieces p = getPieceXY(xInit, yInit);
 		if(p == null)
 			return false;
@@ -58,6 +63,7 @@ public class Echiquier implements BoardGames {
 	public boolean move(int xInit, int yInit, int xFinal, int yFinal) {
 		boolean ret = false;
 		Pieces movingPiece;
+
 		if (isMoveOk(xInit, yInit, xFinal, yFinal)) {
 			movingPiece = getPieceXY(xInit, yInit);
 			if (movingPiece == null) {
@@ -133,7 +139,7 @@ public class Echiquier implements BoardGames {
 		Echiquier e = new Echiquier();
 		System.out.println(e);
 		System.out.println(e.getPiecesIHM());
-		
+
 	}
 
 	public boolean verifyPath(Coord initCoord, Coord finalCoord) {
@@ -142,42 +148,52 @@ public class Echiquier implements BoardGames {
 		int xVector = finalCoord.x - initCoord.x;
 		int yVector = finalCoord.y - initCoord.y;
 		System.out.println("xVector : " + xVector + " yVector : " + yVector);
+		System.out.println("initCoord : " + initCoord + " finalCoord : " + finalCoord);
 
 		List<PieceIHM> piecesIHM = getPiecesIHM();
-		// test straights lines
-		if (xVector==0){
-			for (PieceIHM p : piecesIHM){
-				if(p.getList().get(0) == initCoord ){continue;}
-				else if( Math.abs(p.getList().get(0).y - initCoord.y) > 0 && Math.abs(p.getList().get(0).y - finalCoord.y) < Math.abs(yVector)-1 && p.getList().get(0).x==initCoord.x) return false;
+
+		// test straight lines
+		if (xVector == 0) {
+			int startY = Math.min(initCoord.y, finalCoord.y) + 1;
+			int endY = Math.max(initCoord.y, finalCoord.y);
+			for (PieceIHM p : piecesIHM) {
+				Coord pieceCoord = p.getList().get(0);
+				if (pieceCoord.x == initCoord.x && pieceCoord.y >= startY && pieceCoord.y < endY) {
+					System.out.println(p);
+					return false;
+				}
 			}
-		}
-		else if (yVector==0){
-			for (PieceIHM p : piecesIHM){
-				if(p.getList().get(0) == initCoord ){continue;}
-				else if( Math.abs(p.getList().get(0).x - initCoord.x) > 0 && Math.abs(p.getList().get(0).x - finalCoord.x) < Math.abs(xVector)-1 && p.getList().get(0).y==initCoord.y) return false;
+		} else if (yVector == 0) {
+			int startX = Math.min(initCoord.x, finalCoord.x) + 1;
+			int endX = Math.max(initCoord.x, finalCoord.x);
+			for (PieceIHM p : piecesIHM) {
+				Coord pieceCoord = p.getList().get(0);
+				if (pieceCoord.y == initCoord.y && pieceCoord.x >= startX && pieceCoord.x < endX) {
+					System.out.println(p);
+					return false;
+				}
 			}
 		}
 		// test diagonals
-		else if (Math.abs(xVector)==Math.abs(yVector)){
-			for (int i = 1; i < Math.abs(xVector); i++) {
-				for (PieceIHM p : piecesIHM){
-					if(xVector>0 && yVector>0){
-						if (p.getList().get(0).x==initCoord.x+i && p.getList().get(0).y==initCoord.y+i) return false;
-					} else if (xVector>0 && yVector<0) {
-						if (p.getList().get(0).x==initCoord.x+i && p.getList().get(0).y==initCoord.y-i) return false;
-					} else if (xVector<0 && yVector>0) {
-						if (p.getList().get(0).x==initCoord.x-i && p.getList().get(0).y==initCoord.y+i) return false;
-					} else if (xVector<0 && yVector<0) {
-						if (p.getList().get(0).x==initCoord.x-i && p.getList().get(0).y==initCoord.y-i) return false;
-					} else {
-						System.out.println("une piece se trouve sur le chemin");
+		else if (Math.abs(xVector) == Math.abs(yVector)) {
+			int startX = initCoord.x + (xVector > 0 ? 1 : -1);
+			int startY = initCoord.y + (yVector > 0 ? 1 : -1);
+
+			int numSteps = Math.abs(xVector) - 1;
+			for (int i = 0; i < numSteps; i++) {
+				int currentX = initCoord.x + (xVector > 0 ? (i + 1) : -(i + 1));
+				int currentY = initCoord.y + (yVector > 0 ? (i + 1) : -(i + 1));
+
+				for (PieceIHM p : piecesIHM) {
+					Coord pieceCoord = p.getList().get(0);
+					if (pieceCoord.x == currentX && pieceCoord.y == currentY) {
+						System.out.println(p);
 						return false;
 					}
-
 				}
-
 			}
 		}
 		return true;
 	}
+
 }

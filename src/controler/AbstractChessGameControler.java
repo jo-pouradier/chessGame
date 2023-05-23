@@ -43,10 +43,6 @@ public abstract class AbstractChessGameControler implements ChessGameControlers 
 			System.out.println("Ce n'est pas à vous de jouer, c'est au Joueur "+ this.chessGame.getColorCurrentPlayer());
 			chessGame.refresh();
 		}
-		else if( !chessGame.verifyPath(initCoord, finalCoord)) {
-			System.out.println("il y a un obstacle sur le chemin");
-			chessGame.refresh();
-		}
 		// Actions différentes selon les types de controleur
 		 else if (moveModel(initCoord, finalCoord)) {
 			endMove(initCoord, finalCoord, promotionType);
