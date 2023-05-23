@@ -136,4 +136,48 @@ public class Echiquier implements BoardGames {
 		
 	}
 
+	public boolean verifyPath(Coord initCoord, Coord finalCoord) {
+		System.out.println("verify path");
+		// create the vector between the two points
+		int xVector = finalCoord.x - initCoord.x;
+		int yVector = finalCoord.y - initCoord.y;
+		System.out.println("xVector : " + xVector + " yVector : " + yVector);
+
+		List<PieceIHM> piecesIHM = getPiecesIHM();
+		// test straights lines
+		if (xVector==0){
+			for (PieceIHM p : piecesIHM){
+				if(p.getList().get(0) == initCoord ){continue;}
+				else if( Math.abs(p.getList().get(0).y - initCoord.y) > 0 && Math.abs(p.getList().get(0).y - finalCoord.y) < Math.abs(yVector)-1 && p.getList().get(0).x==initCoord.x) return false;
+			}
+		}
+		else if (yVector==0){
+			for (PieceIHM p : piecesIHM){
+				if(p.getList().get(0) == initCoord ){continue;}
+				else if( Math.abs(p.getList().get(0).x - initCoord.x) > 0 && Math.abs(p.getList().get(0).x - finalCoord.x) < Math.abs(xVector)-1 && p.getList().get(0).y==initCoord.y) return false;
+			}
+		}
+		// test diagonals
+		else if (Math.abs(xVector)==Math.abs(yVector)){
+			for (int i = 1; i < Math.abs(xVector); i++) {
+				for (PieceIHM p : piecesIHM){
+					if(xVector>0 && yVector>0){
+						if (p.getList().get(0).x==initCoord.x+i && p.getList().get(0).y==initCoord.y+i) return false;
+					} else if (xVector>0 && yVector<0) {
+						if (p.getList().get(0).x==initCoord.x+i && p.getList().get(0).y==initCoord.y-i) return false;
+					} else if (xVector<0 && yVector>0) {
+						if (p.getList().get(0).x==initCoord.x-i && p.getList().get(0).y==initCoord.y+i) return false;
+					} else if (xVector<0 && yVector<0) {
+						if (p.getList().get(0).x==initCoord.x-i && p.getList().get(0).y==initCoord.y-i) return false;
+					} else {
+						System.out.println("une piece se trouve sur le chemin");
+						return false;
+					}
+
+				}
+
+			}
+		}
+		return true;
+	}
 }

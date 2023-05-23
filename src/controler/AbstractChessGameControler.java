@@ -37,22 +37,22 @@ public abstract class AbstractChessGameControler implements ChessGameControlers 
 	final public boolean move(Coord initCoord, Coord finalCoord) {
 		boolean ret = false;
 		String promotionType = null; 
-
 		// si c'est bien au tour du joueur courant de jouer
-		if (this.isPlayerOK(initCoord)) {
 
-			// Déplacement métier
-			ret = this.moveModel(initCoord, finalCoord);	 
-
-			// Actions différentes selon les types de controleur
-			if (ret) {	
-				this.endMove(initCoord, finalCoord, promotionType);
-			}
-
-		} else {
+		if (!isPlayerOK(initCoord) ){
 			System.out.println("Ce n'est pas à vous de jouer, c'est au Joueur "+ this.chessGame.getColorCurrentPlayer());
 			chessGame.refresh();
 		}
+		else if( !chessGame.verifyPath(initCoord, finalCoord)) {
+			System.out.println("il y a un obstacle sur le chemin");
+			chessGame.refresh();
+		}
+		// Actions différentes selon les types de controleur
+		 else if (moveModel(initCoord, finalCoord)) {
+			endMove(initCoord, finalCoord, promotionType);
+			ret = true;
+		}
+
 		return ret;
 	}
 

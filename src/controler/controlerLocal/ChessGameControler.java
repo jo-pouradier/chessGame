@@ -6,13 +6,13 @@ import controler.AbstractChessGameControler;
 
 /**
  * @author francoise.perrin
- * 
- *         Ce controleur local précise comment empêcher un joueur à qui ce n'est pas le tour 
+ *
+ *         Ce controleur local précise comment empêcher un joueur à qui ce n'est pas le tour
  *         de jouer, de déplacer une image de pièce sur le damier
  *
  */
 public class ChessGameControler extends AbstractChessGameControler {
-	
+
 	public ChessGameControler(ChessGame chessGame) {
 		super(chessGame);
 	}
@@ -31,19 +31,18 @@ public class ChessGameControler extends AbstractChessGameControler {
 			return true;
 		else
 			System.out.println("Ce n'est pas à vous de jouer");
-		
 		return false;
 	}
 	
 	/* (non-Javadoc)
 	 * @see controler.AbstractChessGameControler#endMove(model.Coord, model.Coord, java.lang.String)
-	 * 
+	 *
 	 * Pas d'action supplémentaire dans un contrôleur local en fin de move
 	 */
 	@Override
 	protected void endMove(Coord initCoord, Coord finalCoord,
 			String promotionType) {
-		
+		// TODO Auto-generated method stub
 	}
 
 	

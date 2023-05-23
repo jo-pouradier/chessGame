@@ -111,4 +111,8 @@ public class ChessGame extends Observable implements BoardGames{
 	public void refresh(){
 		this.notifyObservers(echiquier.getPiecesIHM());
 	}
+
+	public boolean verifyPath(Coord initCoord, Coord finalCoord) {
+		return echiquier.verifyPath(initCoord, finalCoord);
+	}
 }
