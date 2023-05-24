@@ -20,10 +20,9 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
     int xAdjustment;
     int yAdjustment;
     ChessGameControllers chessGameControler;
-
     Dimension boardSize;
-
     Coord lastCoord;
+    private Component lastCaseEntered = null;
 
     public ChessGameGUI(String name, ChessGameControllers chessGameControler, java.awt.Dimension boardSize) {
         this.chessGameControler = chessGameControler;
@@ -74,18 +73,78 @@ public class ChessGameGUI extends JFrame implements MouseListener, MouseMotionLi
     }
 
     public void mouseClicked(MouseEvent e) {
+        // will display green square where a move is possible
+
 
     }
 
+//    public void mouseMoved(MouseEvent e) {
+//        Component c = chessBoard.findComponentAt(e.getX(), e.getY());
+//        if (c == lastCaseEntered) return; // on est sur la meme case
+//        else{
+//            if (lastCaseEntered != null && lastCaseEntered instanceof JPanel) {
+//                int i = boardSize.width / 8;
+//                int col = e.getX() / i;
+//                int row = e.getY() / i;
+//                int place = row + col * 8;
+//                System.out.println("row : " + row + " col : " + col);
+//                System.out.println("place : " + place);
+//                if ( row == 0) lastCaseEntered.setBackground(place % 2 == 0 ? Color.black : Color.white);
+//                else lastCaseEntered.setBackground(place % 2 == 0 ? Color.white : Color.black);
+//            }
+//        }
+//        lastCaseEntered = c;
+//        if (c instanceof JPanel) c.setBackground(Color.green);
+//            Component c = chessBoard.findComponentAt(e.getX(), e.getY());
+//            if (c == lastCaseEntered) return; // on est sur la même case
+//
+//            if (lastCaseEntered != null && lastCaseEntered instanceof JPanel) {
+//                int i = boardSize.width / 8;
+//                int col = e.getX() / i;
+//                int row = e.getY() / i;
+//                int place = row + col * 8;
+//                System.out.println("row : " + row + " col : " + col);
+//                System.out.println("place : " + place);
+//
+//                if (row == 0) {
+//                    lastCaseEntered.setBackground(place % 2 == 0 ? Color.black : Color.white);
+//                } else {
+//                    lastCaseEntered.setBackground(place % 2 == 0 ? Color.white : Color.black);
+//                }
+//            }
+//
+//            lastCaseEntered = c;
+//
+//            if (c instanceof JPanel) {
+//                c.setBackground(Color.green);
+//            }
+//    }
+
     public void mouseMoved(MouseEvent e) {
+        Component c = chessBoard.findComponentAt(e.getX(), e.getY());
+        if (c == lastCaseEntered) return; // on est sur la meme case
+        else {
+            if (lastCaseEntered != null && lastCaseEntered instanceof JPanel) {
+                lastCaseEntered.setBackground(getPreviousColor(lastCaseEntered));
+            }
+        }
+        lastCaseEntered = c;
+        if (c instanceof JPanel) {
+            c.setBackground(Color.green);
+        }
+    }
+
+    private Color getPreviousColor(Component c) {
+        int i = boardSize.width / 8;
+        int col = c.getX() / i;
+        int row = c.getY() / i;
+        return (row + col - 1) % 2 == 0 ? Color.white : Color.black;
     }
 
     public void mouseEntered(MouseEvent e) {
-
     }
 
     public void mouseExited(MouseEvent e) {
-
     }
 
     private void displayCase(){
