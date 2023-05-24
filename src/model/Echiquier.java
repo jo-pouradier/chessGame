@@ -50,7 +50,11 @@ public class Echiquier implements BoardGames {
 		// on verifie s'il n'y a pas de piece qui serait sauté / sur le chemin
 		if (!verifyPath(new Coord(xInit, yInit), new Coord(xFinal, yFinal))) {
 			setMessage("Le chemin n'est pas libre");
-			System.out.println("Le chemin n'est pas libre");
+			return false;
+		}
+		Pieces capturePiece = getPieceXY(xFinal, yFinal);
+		if(capturePiece != null && capturePiece.getCouleur() == jeuCourant.getCouleur()) {
+			setMessage("Vous ne pouvez pas capturer vos propres pièces");
 			return false;
 		}
 		// on vérifie si la piece peut se déplacer à cet endroit
@@ -75,7 +79,6 @@ public class Echiquier implements BoardGames {
 			// on bouge la piece et on vérifie si le roi n'est PAS en échec, on rollback si besoin
 			if (roiEnEchec()){
 				setMessage("Votre roi est en échec si vous jouez ce coup");
-				System.out.println("Votre roi est en échec si vous jouez ce coup");
 				jeuCourant.undoMove(movingPiece, xInit, yInit);
 				return false;
 			}
@@ -84,7 +87,6 @@ public class Echiquier implements BoardGames {
 			if (capturePiece != null && capturePiece.getCouleur() != movingPiece.getCouleur()) {
 				capturePiece.capture();
 				setMessage("Vous avez capturé une pièce");
-				System.out.println("Vous avez capturé une pièce");
 			}
 		}
 		return ret;
@@ -191,4 +193,24 @@ public class Echiquier implements BoardGames {
 		return true;
 	}
 
+	public List<Coord> getPossibleMovement(Coord c){
+		List<Coord> possibleMovement = new LinkedList<>();
+		Pieces p = jeuCourant.findPiece(c.x, c.y);
+		for (int x = 0; x < 8; x++){
+			for (int y = 0; y < 8; y++){
+				if (!isMoveOk(c.x, c.y, x, y)) continue;
+				// on test le déplacement pour vérifier si le roi est en échec
+				if (p.isMoveOk(x,y)) p.move(x, y);
+				if(roiEnEchec()){
+					p.move(c.x, c.y, true);
+					continue;
+				} else {
+					p.move(c.x, c.y, true);
+				}
+
+				possibleMovement.add(new Coord(x,y));
+			}
+		}
+		return possibleMovement;
+	}
 }

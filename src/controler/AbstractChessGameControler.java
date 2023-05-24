@@ -4,6 +4,8 @@ import model.Coord;
 import model.Couleur;
 import model.observable.ChessGame;
 
+import java.util.List;
+
 /**
  * @author francoise.perrin
  * le controleur illustre le DP Strategy vis-à-vis de la Vue
@@ -85,5 +87,9 @@ public abstract class AbstractChessGameControler implements ChessGameControllers
 	protected Couleur getPieceColor(Coord initCoord){		
 		return this.chessGame.getPieceColor(initCoord.x, initCoord.y);		
 	}	
-	
+
+	public List<Coord> getPieceListMoveOK(Coord initCoord){
+		return chessGame.getPieceListMoveOK(initCoord.x, initCoord.y);
+	}
+
 }

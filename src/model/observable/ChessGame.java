@@ -107,4 +107,8 @@ public class ChessGame extends Observable implements BoardGames{
 	public void refresh(){
 		this.notifyObservers(echiquier.getPiecesIHM());
 	}
+
+	public List<Coord> getPieceListMoveOK(int xInit, int yInit){
+		return echiquier.getPossibleMovement(new Coord(xInit, yInit));
+	}
 }
